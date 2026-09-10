@@ -6,11 +6,11 @@
 ========================================== */
 
 const plans = {
-  Jojo: "https://docs.google.com/spreadsheets/d/e/2PACX-1vR-195auLVcne0kWg1Q5tDhvXXpLeAUDtw_IHix1D_TyaJfSXHBdV6PZZ8DkHK6h_PqvWRtj7A5Vuf/pub?gid=0&single=true&output=csv",
+  Jojo: "https://docs.google.com/spreadsheets/d/e/2PACX-1vR-l95auLVcne0kWg1Q5_tDhvXXpLeAUDtw_lHix1D_TyaJfSXHBdV6PZZ8DkHK6h_PqvWRtj7A5Vuf/pub?gid=0&single=true&output=csv",
 
-  Jooris: "https://docs.google.com/spreadsheets/d/e/2PACX-1vR-195auLVcne0kWg1Q5tDhvXXpLeAUDtw_IHix1D_TyaJfSXHBdV6PZZ8DkHK6h_PqvWRtj7A5Vuf/pub?gid=1017612760&single=true&output=csv",
+  Jooris: "https://docs.google.com/spreadsheets/d/e/2PACX-1vR-l95auLVcne0kWg1Q5_tDhvXXpLeAUDtw_lHix1D_TyaJfSXHBdV6PZZ8DkHK6h_PqvWRtj7A5Vuf/pub?gid=1017612760&single=true&output=csv",
 
-  Jule: "https://docs.google.com/spreadsheets/d/e/2PACX-1vR-195auLVcne0kWg1Q5tDhvXXpLeAUDtw_IHix1D_TyaJfSXHBdV6PZZ8DkHK6h_PqvWRtj7A5Vuf/pub?gid=175444478&single=true&output=csv"
+  Jule: "https://docs.google.com/spreadsheets/d/e/2PACX-1vR-l95auLVcne0kWg1Q5_tDhvXXpLeAUDtw_lHix1D_TyaJfSXHBdV6PZZ8DkHK6h_PqvWRtj7A5Vuf/pub?gid=175444478&single=true&output=csv",
 };
 
 const weekdays = [
