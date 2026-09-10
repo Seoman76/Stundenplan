@@ -1,18 +1,16 @@
 "use strict";
 
-/*
-  Die drei veröffentlichten Google-Sheets-Tabs.
-  Der jeweilige gid identifiziert den Tab.
-*/
+/* ==========================================
+   Familien-Stundenplan
+   Version 2.0
+========================================== */
+
 const plans = {
-  Jojo:
-"https://docs.google.com/spreadsheets/d/e/2PACX-1vR-195auLVcne0kWg1Q5tDhvXXpLeAUDtw_IHix1D_TyaJfSXHBdV6PZZ8DkHK6h_PqvWRtj7A5Vuf/pub?gid=0&single=true&output=csv",
+  Jojo: "https://docs.google.com/spreadsheets/d/e/2PACX-1vR-195auLVcne0kWg1Q5tDhvXXpLeAUDtw_IHix1D_TyaJfSXHBdV6PZZ8DkHK6h_PqvWRtj7A5Vuf/pub?gid=0&single=true&output=csv",
 
-  Jooris:
-"https://docs.google.com/spreadsheets/d/e/2PACX-1vR-195auLVcne0kWg1Q5tDhvXXpLeAUDtw_IHix1D_TyaJfSXHBdV6PZZ8DkHK6h_PqvWRtj7A5Vuf/pub?gid=1017612760&single=true&output=csv",
+  Jooris: "https://docs.google.com/spreadsheets/d/e/2PACX-1vR-195auLVcne0kWg1Q5tDhvXXpLeAUDtw_IHix1D_TyaJfSXHBdV6PZZ8DkHK6h_PqvWRtj7A5Vuf/pub?gid=1017612760&single=true&output=csv",
 
-  Jule:
-"https://docs.google.com/spreadsheets/d/e/2PACX-1vR-195auLVcne0kWg1Q5tDhvXXpLeAUDtw_IHix1D_TyaJfSXHBdV6PZZ8DkHK6h_PqvWRtj7A5Vuf/pub?gid=175444478&single=true&output=csv"
+  Jule: "https://docs.google.com/spreadsheets/d/e/2PACX-1vR-195auLVcne0kWg1Q5tDhvXXpLeAUDtw_IHix1D_TyaJfSXHBdV6PZZ8DkHK6h_PqvWRtj7A5Vuf/pub?gid=175444478&single=true&output=csv"
 };
 
 const weekdays = [
@@ -31,227 +29,258 @@ const shortWeekdays = {
   Freitag: "Fr"
 };
 
-function parseCsv(text) {
-  const rows = [];
-  let row = [];
-  let cell = "";
-  let insideQuotes = false;
+/* ==========================================
+   CSV Parser
+========================================== */
 
-  for (let index = 0; index < text.length; index += 1) {
-    const character = text[index];
-    const nextCharacter = text[index + 1];
+function parseCSV(text) {
 
-    if (character === '"' && insideQuotes && nextCharacter === '"') {
-      cell += '"';
-      index += 1;
-      continue;
-    }
+  const lines = text.trim().split(/\r?\n/);
 
-    if (character === '"') {
-      insideQuotes = !insideQuotes;
-      continue;
-    }
-
-    if (character === "," && !insideQuotes) {
-      row.push(cell);
-      cell = "";
-      continue;
-    }
-
-    if (
-      (character == "\n" || character == "\r") &&
-      !insideQuotes
-    ) {
-      if (character === "
-" && nextCharacter === "
-") {
-        index += 1;
-      }
-
-      row.push(cell);
-
-      if (row.some((value) => value.trim() !== "")) {
-        rows.push(row);
-      }
-
-      row = [];
-      cell = "";
-      continue;
-    }
-
-    cell += character;
-  }
-
-  if (cell !== "" || row.length > 0) {
-    row.push(cell);
-
-    if (row.some((value) => value.trim() !== "")) {
-      rows.push(row);
-    }
-  }
-
-  return rows;
-}
-
-function escapeHtml(value) {
-  return String(value ?? "").replace(/[&<>"']/g, (character) => {
-    const entities = {
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#39;"
-    };
-
-    return entities[character];
-  });
-}
-
-function normalizeHeader(value) {
-  return String(value ?? "")
-    .trim()
-    .replace(/\s+/g, " ");
-}
-
-function rowsToObjects(rows) {
-  if (!rows.length) {
+  if (lines.length === 0) {
     return [];
   }
 
-  const headers = rows[0].map(normalizeHeader);
+  const headers = lines[0].split(",");
 
-  return rows.slice(1).map((row) => {
-    const result = {};
+  return lines.slice(1).map(line => {
+
+    const values = line.split(",");
+
+    const row = {};
 
     headers.forEach((header, index) => {
-      result[header] = String(row[index] ?? "").trim();
+
+      row[header.trim()] = (values[index] || "").trim();
+
     });
 
-    return result;
+    return row;
+
   });
+
 }
 
-async function loadPlan(name, url) {
-  const cacheBuster = `_=${Date.now()}`;
-  const separator = url.includes("?") ? "&" : "?";
-  const response = await fetch(`${url}${separator}${cacheBuster}`, {
-    cache: "no-store"
+function escapeHtml(text) {
+
+  return String(text ?? "").replace(/[&<>"']/g, function(char){
+
+    return {
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      "\"":"&quot;",
+      "'":"&#39;"
+    }[char];
+
   });
 
-  if (!response.ok) {
-    throw new Error(`${name}: HTTP ${response.status}`);
+}
+
+async function loadPlan(name, url){
+
+  const response = await fetch(url,{
+    cache:"no-store"
+  });
+
+  if(!response.ok){
+
+    throw new Error(name + " konnte nicht geladen werden.");
+
   }
 
-  const csvText = await response.text();
-  const rows = parseCsv(csvText);
-  const lessons = rowsToObjects(rows);
+  const csv = await response.text();
 
   return {
-    name,
-    lessons
+
+    name:name,
+    lessons:parseCSV(csv)
+
   };
+
+}
+/* ==========================================
+   Darstellung
+========================================== */
+
+function subjectHtml(subject){
+
+  const value = String(subject || "").trim();
+
+  return `
+    <span class="${value ? "subject" : "subject empty"}">
+      ${escapeHtml(value || "—")}
+    </span>
+  `;
+
 }
 
-function subjectHtml(value) {
-  const subject = String(value ?? "").trim();
-  const className = subject ? "subject" : "subject empty";
-  const text = subject || "—";
+function renderLesson(lesson){
 
-  return `<span class="${className}">${escapeHtml(text)}</span>`;
-}
+  let days = "";
 
-function renderLesson(lesson) {
-  const number = lesson.Stunde || "";
-  const time = lesson.Zeit || "";
+  weekdays.forEach(day => {
 
-  const daysHtml = weekdays
-    .map((weekday) => {
-      return `
-        <div class="day">
-          <span class="day-name">${shortWeekdays[weekday]}</span>
-          ${subjectHtml(lesson[weekday])}
-        </div>
-      `;
-    })
-    .join("");
+    days += `
+      <div class="day">
+        <span class="day-name">${shortWeekdays[day]}</span>
+        ${subjectHtml(lesson[day])}
+      </div>
+    `;
+
+  });
 
   return `
     <article class="lesson-card">
+
       <div class="lesson-header">
+
         <span class="lesson-number">
-          ${escapeHtml(number)}. Stunde
+          ${escapeHtml(lesson.Stunde)}. Stunde
         </span>
-        <span class="lesson-time">${escapeHtml(time)}</span>
+
+        <span class="lesson-time">
+          ${escapeHtml(lesson.Zeit)}
+        </span>
+
       </div>
-      <div class="days">${daysHtml}</div>
+
+      <div class="days">
+
+        ${days}
+
+      </div>
+
     </article>
   `;
+
 }
 
-function renderPlan(plan) {
-  const lessonsHtml = plan.lessons.length
-    ? plan.lessons.map(renderLesson).join("")
-    : `<div class="empty-state">Keine Stundenplandaten gefunden.</div>`;
+function renderPlan(plan){
+
+  let html = "";
+
+  plan.lessons.forEach(lesson=>{
+
+    html += renderLesson(lesson);
+
+  });
 
   return `
+
     <article class="child-card">
-      <h2 class="child-title">${escapeHtml(plan.name)}</h2>
-      ${lessonsHtml}
+
+      <h2 class="child-title">
+        ${escapeHtml(plan.name)}
+      </h2>
+
+      ${html}
+
     </article>
+
   `;
+
+}
+/* ==========================================
+   Aktualisierung
+========================================== */
+
+function setStatus(message, error = false){
+
+    const status = document.getElementById("status");
+
+    status.textContent = message;
+
+    status.classList.toggle("error", error);
+
 }
 
-function setStatus(message, isError = false) {
-  const status = document.querySelector("#status");
+async function refreshPlans(){
 
-  status.textContent = message;
-  status.classList.toggle("error", isError);
+    const container = document.getElementById("plans");
+
+    const lastUpdate = document.getElementById("last-update");
+
+    setStatus("Stundenpläne werden geladen ...");
+
+    container.innerHTML = "";
+
+    try{
+
+        const loaded = await Promise.all(
+
+            Object.entries(plans).map(
+
+                ([name,url]) => loadPlan(name,url)
+
+            )
+
+        );
+
+        loaded.forEach(plan=>{
+
+            container.innerHTML += renderPlan(plan);
+
+        });
+
+        lastUpdate.textContent =
+            "Aktualisiert um " +
+            new Date().toLocaleTimeString("de-DE",{
+                hour:"2-digit",
+                minute:"2-digit"
+            }) +
+            " Uhr";
+
+        setStatus("Alle Stundenpläne erfolgreich geladen.");
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        setStatus(error.message,true);
+
+        container.innerHTML = `
+
+            <div class="empty-state">
+
+                Fehler beim Laden der Stundenpläne.
+
+                <br><br>
+
+                Bitte prüfe die Google-Sheets-Freigabe.
+
+            </div>
+
+        `;
+
+    }
+
 }
 
-async function refreshPlans() {
-  const plansContainer = document.querySelector("#plans");
-  const lastUpdate = document.querySelector("#last-update");
-
-  setStatus("Stundenpläne werden geladen …");
-  plansContainer.innerHTML = "";
-
-  try {
-    const loadedPlans = await Promise.all(
-      Object.entries(plans).map(([name, url]) => loadPlan(name, url))
-    );
-
-    plansContainer.innerHTML = loadedPlans.map(renderPlan).join("");
-
-    const currentTime = new Date().toLocaleTimeString("de-DE", {
-      hour: "2-digit",
-      minute: "2-digit"
-    });
-
-    lastUpdate.textContent = `Aktualisiert um ${currentTime} Uhr`;
-    setStatus("Alle Stundenpläne sind aktuell.");
-  } catch (error) {
-    console.error(error);
-
-    setStatus(
-      "Die Stundenpläne konnten nicht geladen werden. Prüfe, ob alle drei Tabs öffentlich veröffentlicht sind.",
-      true
-    );
-
-    plansContainer.innerHTML = `
-      <div class="empty-state">
-        Bitte veröffentliche jeden Google-Sheets-Tab als CSV und prüfe die Links.
-      </div>
-    `;
-  }
-}
+/* ==========================================
+   Start
+========================================== */
 
 document
-  .querySelector("#refresh-button")
-  .addEventListener("click", refreshPlans);
+
+    .getElementById("refresh-button")
+
+    .addEventListener(
+
+        "click",
+
+        refreshPlans
+
+    );
 
 refreshPlans();
 
-/*
-  Alle fünf Minuten aktualisieren.
-*/
-window.setInterval(refreshPlans, 5 * 60 * 1000);
+setInterval(
+
+    refreshPlans,
+
+    300000
+
+);
