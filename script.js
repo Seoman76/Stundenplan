@@ -2,7 +2,7 @@
 
 /* ==========================================
    Familien-Stundenplan
-   Version 2.1
+   Version 2.2
 ========================================== */
 
 const plans = {
@@ -29,12 +29,17 @@ const shortWeekdays = {
   Freitag: "Fr"
 };
 
+function getCurrentWeekday() {
+  const jsDay = new Date().getDay();
+  if (jsDay < 1 || jsDay > 5) return null;
+  return weekdays[jsDay - 1];
+}
+
 /* ==========================================
    CSV Parser
 ========================================== */
 
 function parseCSV(text) {
-
   const lines = text.trim().split(/\r?\n/);
 
   if (lines.length === 0) {
@@ -44,68 +49,51 @@ function parseCSV(text) {
   const headers = lines[0].split(",");
 
   return lines.slice(1).map(line => {
-
     const values = line.split(",");
-
     const row = {};
 
     headers.forEach((header, index) => {
-
       row[header.trim()] = (values[index] || "").trim();
-
     });
 
     return row;
-
   });
-
 }
 
 function escapeHtml(text) {
-
-  return String(text ?? "").replace(/[&<>"']/g, function(char){
-
+  return String(text ?? "").replace(/[&<>"']/g, function(char) {
     return {
-      "&":"&amp;",
-      "<":"&lt;",
-      ">":"&gt;",
-      "\"":"&quot;",
-      "'":"&#39;"
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      "\"": "&quot;",
+      "'": "&#39;"
     }[char];
-
   });
-
 }
 
-async function loadPlan(name, url){
-
-  const response = await fetch(url,{
-    cache:"no-store"
+async function loadPlan(name, url) {
+  const response = await fetch(url, {
+    cache: "no-store"
   });
 
-  if(!response.ok){
-
+  if (!response.ok) {
     throw new Error(name + " konnte nicht geladen werden.");
-
   }
 
   const csv = await response.text();
 
   return {
-
-    name:name,
-    lessons:parseCSV(csv)
-
+    name: name,
+    lessons: parseCSV(csv)
   };
-
 }
 
 /* ==========================================
    Darstellung
 ========================================== */
 
-function subjectHtml(subject){
-
+function subjectHtml(subject) {
   const value = String(subject || "").trim();
 
   return `
@@ -113,22 +101,21 @@ function subjectHtml(subject){
       ${escapeHtml(value || "—")}
     </span>
   `;
-
 }
 
-function renderLesson(lesson){
-
+function renderLesson(lesson) {
+  const currentWeekday = getCurrentWeekday();
   let days = "";
 
   weekdays.forEach(day => {
+    const todayClass = day === currentWeekday ? " today" : "";
 
     days += `
-      <div class="day">
+      <div class="day${todayClass}">
         <span class="day-name">${shortWeekdays[day]}</span>
         ${subjectHtml(lesson[day])}
       </div>
     `;
-
   });
 
   return `
@@ -147,22 +134,17 @@ function renderLesson(lesson){
       </div>
 
       <div class="days">
-
         ${days}
-
       </div>
 
     </article>
   `;
-
 }
-function renderPlan(plan){
 
+function renderPlan(plan) {
   let html = "";
 
   plan.lessons.forEach(lesson => {
-
-    // Leere Kopfzeile ausblenden
     if (
       !lesson.Stunde ||
       lesson.Stunde === "." ||
@@ -173,116 +155,78 @@ function renderPlan(plan){
     }
 
     html += renderLesson(lesson);
-
   });
 
   return `
-
     <article class="child-card">
-
       <h2 class="child-title">
         ${escapeHtml(plan.name)}
       </h2>
-
       ${html}
-
     </article>
-
   `;
-
 }
 
 /* ==========================================
    Aktualisierung
 ========================================== */
 
-function setStatus(message, error = false){
-
-    const status = document.getElementById("status");
-
-    status.textContent = message;
-
-    status.classList.toggle("error", error);
-
+function setStatus(message, error = false) {
+  const status = document.getElementById("status");
+  status.textContent = message;
+  status.classList.toggle("error", error);
 }
 
-async function refreshPlans(){
+async function refreshPlans() {
+  const container = document.getElementById("plans");
+  const lastUpdate = document.getElementById("last-update");
 
-    const container = document.getElementById("plans");
+  setStatus("Stundenpläne werden geladen ...");
+  container.innerHTML = "";
 
-    const lastUpdate = document.getElementById("last-update");
+  try {
+    const loaded = await Promise.all(
+      Object.entries(plans).map(
+        ([name, url]) => loadPlan(name, url)
+      )
+    );
 
-    setStatus("Stundenpläne werden geladen ...");
+    loaded.forEach(plan => {
+      container.innerHTML += renderPlan(plan);
+    });
 
-    container.innerHTML = "";
+    lastUpdate.textContent =
+      "Aktualisiert um " +
+      new Date().toLocaleTimeString("de-DE", {
+        hour: "2-digit",
+        minute: "2-digit"
+      }) +
+      " Uhr";
 
-    try{
+    setStatus("Alle Stundenpläne erfolgreich geladen.");
+  }
+  catch(error) {
+    console.error(error);
 
-        const loaded = await Promise.all(
+    setStatus(error.message, true);
 
-            Object.entries(plans).map(
-
-                ([name,url]) => loadPlan(name,url)
-
-            )
-
-        );
-
-        loaded.forEach(plan=>{
-
-            container.innerHTML += renderPlan(plan);
-
-        });
-
-        lastUpdate.textContent =
-            "Aktualisiert um " +
-            new Date().toLocaleTimeString("de-DE",{
-                hour:"2-digit",
-                minute:"2-digit"
-            }) +
-            " Uhr";
-
-        setStatus("Alle Stundenpläne erfolgreich geladen.");
-
-    }
-       catch(error){
-
-        console.error(error);
-
-        setStatus(error.message, true);
-
-        container.innerHTML = `
-
-            <div class="empty-state">
-
-                Fehler beim Laden der Stundenpläne.
-
-                <br><br>
-
-                Bitte prüfe die Google-Sheets-Freigabe.
-
-            </div>
-
-        `;
-
-    }
-
+    container.innerHTML = `
+      <div class="empty-state">
+        Fehler beim Laden der Stundenpläne.
+        <br><br>
+        Bitte prüfe die Google-Sheets-Freigabe.
+      </div>
+    `;
+  }
 }
 
 /* ==========================================
    Start
 ========================================== */
 
-// Kein Aktualisieren-Button mehr.
-// Die Pläne werden automatisch geladen
-// und anschließend alle 5 Minuten aktualisiert.
-
 refreshPlans();
 
 setInterval(
-
-    refreshPlans,
-
-    300000
-
+  refreshPlans,
+  300000
 );
