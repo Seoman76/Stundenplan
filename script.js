@@ -2,7 +2,7 @@
 
 /* ==========================================
    Familien-Stundenplan
-   Version 2.0
+   Version 2.1
 ========================================== */
 
 const plans = {
@@ -99,6 +99,7 @@ async function loadPlan(name, url){
   };
 
 }
+
 /* ==========================================
    Darstellung
 ========================================== */
@@ -155,12 +156,21 @@ function renderLesson(lesson){
   `;
 
 }
-
 function renderPlan(plan){
 
   let html = "";
 
-  plan.lessons.forEach(lesson=>{
+  plan.lessons.forEach(lesson => {
+
+    // Leere Kopfzeile ausblenden
+    if (
+      !lesson.Stunde ||
+      lesson.Stunde === "." ||
+      lesson.Stunde === "-" ||
+      lesson.Stunde === "—"
+    ) {
+      return;
+    }
 
     html += renderLesson(lesson);
 
@@ -181,6 +191,7 @@ function renderPlan(plan){
   `;
 
 }
+
 /* ==========================================
    Aktualisierung
 ========================================== */
@@ -234,12 +245,11 @@ async function refreshPlans(){
         setStatus("Alle Stundenpläne erfolgreich geladen.");
 
     }
-
-    catch(error){
+       catch(error){
 
         console.error(error);
 
-        setStatus(error.message,true);
+        setStatus(error.message, true);
 
         container.innerHTML = `
 
@@ -263,17 +273,9 @@ async function refreshPlans(){
    Start
 ========================================== */
 
-document
-
-    .getElementById("refresh-button")
-
-    .addEventListener(
-
-        "click",
-
-        refreshPlans
-
-    );
+// Kein Aktualisieren-Button mehr.
+// Die Pläne werden automatisch geladen
+// und anschließend alle 5 Minuten aktualisiert.
 
 refreshPlans();
 
