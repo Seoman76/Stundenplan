@@ -1,307 +1,460 @@
+/* ==========================================
+   Familien-Stundenplan
+   Dark TV Edition
+   Version 3.0
+========================================== */
+
 :root {
-  --background: #eef3f8;
-  --surface: #ffffff;
-  --text: #182333;
-  --muted: #63778b;
-  --primary: #2864d7;
-  --primary-dark: #174ba9;
-  --border: #dbe5ef;
-  --lesson-background: #fbfdff;
-  --day-background: #edf4fb;
-  --empty: #9aa8b6;
-  --shadow: 0 10px 30px rgba(38, 59, 85, 0.1);
+  --bg: #0b1020;
+  --bg-soft: #11182b;
+  --surface: #151d31;
+  --surface-soft: #1b253c;
+  --surface-light: #222d47;
+
+  --text: #f4f7fb;
+  --text-soft: #aab4c8;
+  --text-muted: #7f8aa3;
+
+  --border: rgba(255, 255, 255, 0.08);
+
+  --jojo: #ec7aa9;
+  --jooris: #6ca8ff;
+  --jule: #b58cff;
+
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
 }
+
+/* ==========================================
+   Grundlayout
+========================================== */
 
 * {
   box-sizing: border-box;
 }
 
-html {
-  min-width: 320px;
-  background: var(--background);
+html,
+body {
+  margin: 0;
+  width: 100%;
+  min-height: 100%;
 }
 
 body {
-  margin: 0;
-  color: var(--text);
-  background: var(--background);
   font-family:
+    Inter,
     system-ui,
     -apple-system,
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
+
+  background:
+    radial-gradient(
+      circle at top left,
+      #17233d 0%,
+      #0b1020 45%,
+      #080c17 100%
+    );
+
+  color: var(--text);
 }
 
 .page {
   width: 100%;
-  max-width: 1920px;
-  min-height: 100vh;
-  margin: 0 auto;
-  padding: 12px 16px;
-  height:100vh;
-  display:flex;
-  flex-direction:column;
+  height: 100vh;
+
+  padding: 20px 26px 22px;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
 }
+
+/* ==========================================
+   Kopfbereich
+========================================== */
 
 .page-header {
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 10px;
+
+  flex: 0 0 auto;
+
+  margin-bottom: 8px;
 }
 
 .eyebrow {
-  margin: 0 0 6px;
-  color: var(--muted);
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.14em;
+  margin: 0 0 2px;
+
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
+
+  color: var(--text-soft);
 }
 
 h1 {
   margin: 0;
-  font-size: clamp(32px, 4vw, 48px);
+
+  font-size: clamp(26px, 2.4vw, 40px);
   line-height: 1;
+  font-weight: 750;
+
+  letter-spacing: -0.03em;
 }
 
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 14px;
+
+  padding-top: 8px;
 }
 
 .last-update {
-  color: var(--muted);
-  font-size: 13px;
+  font-size: 11px;
+  color: var(--text-soft);
 }
 
-button {
-  border: 0;
-  border-radius: 12px;
-  padding: 12px 18px;
-  color: #ffffff;
-  background: var(--primary);
-  font: inherit;
-  font-weight: 750;
-  cursor: pointer;
-  transition:
-    background 0.2s ease,
-    transform 0.2s ease;
-}
-
-button:hover {
-  background: var(--primary-dark);
-  transform: translateY(-1px);
-}
-
-button:focus-visible {
-  outline: 3px solid rgba(40, 100, 215, 0.35);
-  outline-offset: 3px;
-}
+/* ==========================================
+   Status
+========================================== */
 
 .status {
-  min-height: 24px;
-  margin-bottom: 18px;
-  color: var(--muted);
-  font-size: 13px;
+  flex: 0 0 auto;
+
+  min-height: 18px;
+
+  margin-bottom: 8px;
+
+  font-size: 11px;
+  color: var(--text-muted);
 }
 
 .status.error {
-  color: #a12424;
-  font-weight: 650;
+  color: #ff8793;
 }
 
+/* ==========================================
+   Drei Stundenpläne
+========================================== */
+
 .plans {
+  flex: 1 1 auto;
+  min-height: 0;
+
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 24px;
-  align-items: start;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 14px;
 }
+
+/* ==========================================
+   Kinderkarten
+========================================== */
 
 .child-card {
   min-width: 0;
+  min-height: 0;
+
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+
   padding: 12px;
-  border: 1px solid rgba(219, 229, 239, 0.9);
-  border-radius: 22px;
-  background: var(--surface);
-  box-shadow: var(--shadow);
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(30, 40, 64, 0.98),
+      rgba(18, 25, 42, 0.98)
+    );
+
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+
+  overflow: hidden;
+
+  box-shadow:
+    0 14px 38px rgba(0, 0, 0, 0.28);
+}
+
+/* Jojo */
+
+.child-card:nth-child(1) {
+  border-top: 3px solid var(--jojo);
+}
+
+/* Jooris */
+
+.child-card:nth-child(2) {
+  border-top: 3px solid var(--jooris);
+}
+
+/* Jule */
+
+.child-card:nth-child(3) {
+  border-top: 3px solid var(--jule);
 }
 
 .child-title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin: 0 0 10px;
-  font-size: 24px;
-  line-height: 1.1;
+  flex: 0 0 auto;
+
+  margin: 0 0 8px;
+
+  font-size: 20px;
+  line-height: 1;
+  font-weight: 700;
 }
 
-.child-title::after {
-  content: "Woche";
-  border-radius: 999px;
-  padding: 6px 10px;
-  color: var(--primary);
-  background: #eaf1ff;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
+/* ==========================================
+   Stunden
+========================================== */
 
 .lesson-card {
-  margin: 4px 0;
-  padding: 8px;
-  border: 1px solid var(--border);
-  border-radius: 15px;
-  background: var(--lesson-background);
+  flex: 1 1 0;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  margin-bottom: 5px;
+
+  padding: 5px 7px 6px;
+
+  background: rgba(255, 255, 255, 0.045);
+
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  border-radius: var(--radius-md);
 }
 
+.lesson-card:last-child {
+  margin-bottom: 0;
+}
+
+/* ==========================================
+   Stunden-Kopf
+========================================== */
+
 .lesson-header {
+  flex: 0 0 auto;
+
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 6px;
+  align-items: center;
+
+  min-height: 15px;
+
+  margin-bottom: 3px;
 }
 
 .lesson-number {
-  color: var(--primary);
-  font-weight: 850;
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 700;
 }
 
 .lesson-time {
-  color: #34495e;
-  font-size: 14px;
-  font-weight: 750;
-  white-space: nowrap;
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 600;
+
+  color: var(--text-soft);
 }
 
+/* individuelle Akzentfarben */
+
+.child-card:nth-child(1) .lesson-number {
+  color: var(--jojo);
+}
+
+.child-card:nth-child(2) .lesson-number {
+  color: var(--jooris);
+}
+
+.child-card:nth-child(3) .lesson-number {
+  color: var(--jule);
+}
+
+/* ==========================================
+   Wochentage
+========================================== */
+
 .days {
+  flex: 1 1 auto;
+  min-height: 0;
+
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 7px;
+
+  grid-template-columns:
+    repeat(5, minmax(0, 1fr));
+
+  gap: 4px;
 }
 
 .day {
-  min-height: 40px;
-  padding: 4px 2px;
-  border-radius: 9px;
-  color: var(--text);
-  background: var(--day-background);
-  text-align: center;
-  overflow-wrap: anywhere;
+  min-width: 0;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  padding: 2px 3px;
+
+  background: rgba(255, 255, 255, 0.045);
+
+  border-radius: var(--radius-sm);
 }
 
 .day-name {
   display: block;
-  margin-bottom: 4px;
-  color: var(--muted);
-  font-size: 11px;
-  font-weight: 750;
+
+  margin-bottom: 1px;
+
+  font-size: 7px;
+  line-height: 1;
+  font-weight: 600;
+
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+
+  color: var(--text-muted);
 }
 
 .subject {
   display: block;
-  font-size: 14px;
-  font-weight: 750;
+
+  max-width: 100%;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  font-size: clamp(8px, 0.7vw, 11px);
+  line-height: 1.05;
+  font-weight: 650;
+
+  color: var(--text);
 }
 
 .subject.empty {
-  color: var(--empty);
-  font-weight: 500;
+  color: var(--text-muted);
 }
+
+/* ==========================================
+   Fehlermeldung
+========================================== */
 
 .empty-state {
-  padding: 20px;
-  border: 1px dashed var(--border);
-  border-radius: 14px;
-  color: var(--muted);
+  grid-column: 1 / -1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 100%;
+
   text-align: center;
+
+  color: var(--text-soft);
+
+  background: var(--surface);
+  border-radius: var(--radius-lg);
 }
 
+/* ==========================================
+   Tablet / kleinere Fenster
+========================================== */
+
 @media (max-width: 1250px) {
+
   .page {
-    padding: 28px;
+    height: auto;
+    min-height: 100vh;
+
+    padding: 18px;
+
+    overflow: visible;
   }
 
   .plans {
+    display: grid;
     grid-template-columns: 1fr;
+
+    gap: 16px;
   }
 
   .child-card {
-    max-width: none;
+    height: auto;
   }
+
+  .lesson-card {
+    min-height: 58px;
+  }
+
+  .subject {
+    font-size: 11px;
+  }
+
 }
 
-@media (max-width: 650px) {
+/* ==========================================
+   Handy
+========================================== */
+
+@media (max-width: 700px) {
+
   .page {
-    padding: 20px 14px;
+    padding: 14px;
   }
 
   .page-header {
     align-items: flex-start;
-    flex-direction: column;
   }
 
-  .header-actions {
-    width: 100%;
-    justify-content: space-between;
+  h1 {
+    font-size: 28px;
   }
 
   .last-update {
-    font-size: 12px;
+    font-size: 9px;
   }
 
   .child-card {
-    padding: 16px;
-    border-radius: 17px;
-  }
-
-  .child-title {
-    font-size: 25px;
-  }
-
-  .lesson-card {
-    padding: 11px;
-  }
-
-  .day {
-    min-height: 47px;
-  }
-
-  .subject {
-    font-size: 12px;
-  }
-}
-
-@media print {
-  body {
-    background: #ffffff;
-  }
-
-  .page {
     padding: 10px;
   }
 
-  .header-actions,
-  .status {
-    display: none;
-  }
-
-  .plans {
-    gap: 10px;
-  }
-
-  .child-card {
-    border: 1px solid #cccccc;
-    box-shadow: none;
+  .child-title {
+    font-size: 19px;
   }
 
   .lesson-card {
-    break-inside: avoid;
+    min-height: 62px;
   }
+
+  .lesson-number {
+    font-size: 11px;
+  }
+
+  .lesson-time {
+    font-size: 9px;
+  }
+
+  .day-name {
+    font-size: 7px;
+  }
+
+  .subject {
+    font-size: 10px;
+  }
+
 }
