@@ -468,3 +468,93 @@ h1 {
   }
 
 }
+/* ==========================================
+   TV Feintuning – volle Home-Screens-Fläche
+   Version 3.3
+========================================== */
+
+@media (min-width: 1251px) {
+
+  .page {
+    padding: 18px 22px 18px;
+  }
+
+  h1 {
+    font-size: 38px;
+  }
+
+  .eyebrow {
+    font-size: 12px;
+  }
+
+  .last-update {
+    font-size: 12px;
+  }
+
+  .plans {
+    gap: 16px;
+  }
+
+  .child-card {
+    padding: 12px;
+    border-radius: 18px;
+  }
+
+  .child-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  .lesson-card {
+    margin-bottom: 7px;
+    padding: 9px 8px 10px;
+    border-radius: 11px;
+  }
+
+  .lesson-header {
+    margin-bottom: 6px;
+  }
+
+  .lesson-number {
+    font-size: 14px;
+  }
+
+  .lesson-time {
+    font-size: 13px;
+  }
+
+  .days {
+    gap: 5px;
+  }
+
+  .day {
+    padding: 7px 4px 8px;
+    border-radius: 8px;
+  }
+
+  .day-name {
+    font-size: 9px;
+    margin-bottom: 4px;
+  }
+
+  .subject {
+    font-size: 13px;
+    line-height: 1.15;
+  }
+
+  /* Jule mit etwas mehr Luft */
+  .child-card:nth-child(3) .lesson-card {
+    padding-top: 12px;
+    padding-bottom: 13px;
+  }
+
+  .child-card:nth-child(3) .day {
+    padding-top: 10px;
+    padding-bottom: 11px;
+  }
+
+  .child-card:nth-child(3) .subject {
+    font-size: 14px;
+  }
+
+}
