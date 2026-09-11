@@ -369,3 +369,102 @@ h1 {
   }
 
 }
+/* ==========================================
+   TV Feintuning – bessere Lesbarkeit
+   Version 3.2
+========================================== */
+
+@media (min-width: 1251px) {
+
+  /* Bildschirmfläche besser ausnutzen */
+  .page {
+    padding: 16px 20px 12px;
+  }
+
+  /* Überschrift etwas größer */
+  h1 {
+    font-size: 34px;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+  }
+
+  .last-update {
+    font-size: 11px;
+  }
+
+  /* Drei Pläne etwas weiter auseinander */
+  .plans {
+    gap: 14px;
+  }
+
+  /* Kinderkarten */
+  .child-card {
+    padding: 11px;
+    border-radius: 17px;
+  }
+
+  .child-title {
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+
+  /* Stunden deutlich höher */
+  .lesson-card {
+    margin-bottom: 6px;
+    padding: 7px 7px 8px;
+    border-radius: 10px;
+  }
+
+  /* 1. Stunde / Uhrzeit */
+  .lesson-header {
+    margin-bottom: 5px;
+  }
+
+  .lesson-number {
+    font-size: 13px;
+  }
+
+  .lesson-time {
+    font-size: 12px;
+  }
+
+  /* Fächerfelder */
+  .days {
+    gap: 4px;
+  }
+
+  .day {
+    padding: 5px 3px 6px;
+    border-radius: 7px;
+  }
+
+  /* Mo / Di / Mi ... */
+  .day-name {
+    font-size: 8px;
+    margin-bottom: 3px;
+  }
+
+  /* Fachnamen – wichtigste Änderung */
+  .subject {
+    font-size: 12px;
+    line-height: 1.15;
+  }
+
+  /* Jule darf wegen nur 6 Stunden größer bleiben */
+  .child-card:nth-child(3) .lesson-card {
+    padding-top: 10px;
+    padding-bottom: 11px;
+  }
+
+  .child-card:nth-child(3) .day {
+    padding-top: 8px;
+    padding-bottom: 9px;
+  }
+
+  .child-card:nth-child(3) .subject {
+    font-size: 13px;
+  }
+
+}
