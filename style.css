@@ -1,24 +1,20 @@
 /* ==========================================
    Familien-Stundenplan
    Dark TV Edition
-   Version 3.1
+   Version 3.4
 ========================================== */
 
 :root {
   --bg: #0a0f1d;
   --surface: #121a2a;
-  --surface-2: #182235;
-  --surface-3: #202c42;
-
   --text: #f5f7fb;
   --text-soft: #aab5c7;
   --text-muted: #7c8799;
-
   --border: rgba(255,255,255,0.08);
 
-  --jojo: #ef7da9;
-  --jooris: #72a9ff;
-  --jule: #b88cff;
+  --jojo: #ef5aa6;
+  --jooris: #42b7ff;
+  --jule: #a865ff;
 }
 
 * {
@@ -47,44 +43,31 @@ body {
     radial-gradient(circle at top left, #17233b 0%, #0a0f1d 45%, #070b13 100%);
 }
 
-/* ==========================================
-   Seitenlayout
-========================================== */
-
 .page {
   width: 100%;
   min-height: 100vh;
-
-  padding: 14px 18px 16px;
+  padding: 18px 22px 18px;
 }
-
-/* ==========================================
-   Kopfbereich
-========================================== */
 
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-
   margin-bottom: 4px;
 }
 
 .eyebrow {
   margin: 0 0 2px;
-
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-
   color: var(--text-soft);
 }
 
 h1 {
   margin: 0;
-
-  font-size: 30px;
+  font-size: 38px;
   line-height: 1;
   font-weight: 750;
 }
@@ -94,14 +77,13 @@ h1 {
 }
 
 .last-update {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--text-soft);
 }
 
 .status {
   min-height: 16px;
   margin-bottom: 6px;
-
   font-size: 10px;
   color: var(--text-muted);
 }
@@ -110,105 +92,87 @@ h1 {
   color: #ff8994;
 }
 
-/* ==========================================
-   Drei Kinder nebeneinander
-========================================== */
-
 .plans {
   display: grid;
-
-  grid-template-columns:
-    repeat(3, minmax(0, 1fr));
-
-  gap: 12px;
-
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
   align-items: start;
 }
 
-/* ==========================================
-   Kinderkarten
-========================================== */
-
 .child-card {
   min-width: 0;
-
-  padding: 10px;
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(27,38,58,0.98),
-      rgba(16,23,38,0.98)
-    );
-
+  padding: 12px;
+  background: linear-gradient(180deg, rgba(27,38,58,.98), rgba(16,23,38,.98));
   border: 1px solid var(--border);
-  border-radius: 16px;
-
-  box-shadow:
-    0 12px 30px rgba(0,0,0,0.25);
+  border-radius: 18px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.25);
 }
 
 .child-card:nth-child(1) {
   border-top: 3px solid var(--jojo);
+  box-shadow: 0 0 24px rgba(239,90,166,.13);
 }
 
 .child-card:nth-child(2) {
   border-top: 3px solid var(--jooris);
+  box-shadow: 0 0 24px rgba(66,183,255,.13);
 }
 
 .child-card:nth-child(3) {
   border-top: 3px solid var(--jule);
+  box-shadow: 0 0 24px rgba(168,101,255,.13);
 }
 
 .child-title {
-  margin: 0 0 7px;
-
-  font-size: 20px;
+  margin: 0 0 10px;
+  font-size: 24px;
   line-height: 1;
-  font-weight: 700;
+  font-weight: 750;
 }
 
-/* ==========================================
-   Stundenkarten
-========================================== */
+.child-card:nth-child(1) .child-title {
+  color: var(--jojo);
+}
+
+.child-card:nth-child(2) .child-title {
+  color: var(--jooris);
+}
+
+.child-card:nth-child(3) .child-title {
+  color: var(--jule);
+}
 
 .lesson-card {
-  margin-bottom: 5px;
+  margin-bottom: 7px;
+  padding: 9px 8px 10px;
 
-  padding: 5px 6px 6px;
+  background: rgba(255,255,255,.045);
 
-  background: rgba(255,255,255,0.045);
-
-  border: 1px solid rgba(255,255,255,0.05);
-  border-radius: 9px;
+  border: 1px solid rgba(255,255,255,.05);
+  border-radius: 11px;
 }
 
 .lesson-card:last-child {
   margin-bottom: 0;
 }
 
-/* ==========================================
-   Stundenkopf
-========================================== */
-
 .lesson-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  margin-bottom: 3px;
+  margin-bottom: 6px;
 }
 
 .lesson-number {
-  font-size: 11px;
+  font-size: 14px;
   line-height: 1;
   font-weight: 750;
 }
 
 .lesson-time {
-  font-size: 10px;
+  font-size: 13px;
   line-height: 1;
-
+  font-weight: 650;
   color: var(--text-soft);
 }
 
@@ -224,57 +188,50 @@ h1 {
   color: var(--jule);
 }
 
-/* ==========================================
-   Fächer-Zeile
-========================================== */
-
 .days {
   display: grid;
-
-  grid-template-columns:
-    repeat(5, minmax(0, 1fr));
-
-  gap: 3px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 5px;
 }
 
 .day {
   min-width: 0;
-
-  padding: 3px 2px 4px;
-
+  padding: 7px 4px 8px;
   text-align: center;
 
-  background: rgba(255,255,255,0.045);
+  background: rgba(255,255,255,.055);
 
-  border-radius: 6px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+
+  transition: background .2s ease, border-color .2s ease, box-shadow .2s ease;
 }
 
 .day-name {
   display: block;
+  margin-bottom: 4px;
 
-  margin-bottom: 2px;
-
-  font-size: 7px;
+  font-size: 9px;
   line-height: 1;
+  font-weight: 750;
 
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: .04em;
 
   color: var(--text-muted);
 }
 
 .subject {
   display: block;
-
   max-width: 100%;
 
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 
-  font-size: 10px;
+  font-size: 13px;
   line-height: 1.15;
-  font-weight: 650;
+  font-weight: 750;
 
   color: var(--text);
 }
@@ -283,17 +240,83 @@ h1 {
   color: var(--text-muted);
 }
 
-/* ==========================================
-   Jule etwas luftiger
-========================================== */
+/* Jojo + Jooris: Fächer größer */
+.child-card:nth-child(1) .subject,
+.child-card:nth-child(2) .subject {
+  font-size: 15px;
+  font-weight: 800;
+}
 
+/* Jule bleibt etwas größer, aber passend zu den längeren Namen */
 .child-card:nth-child(3) .lesson-card {
-  padding-top: 7px;
-  padding-bottom: 8px;
+  padding-top: 12px;
+  padding-bottom: 13px;
+}
+
+.child-card:nth-child(3) .day {
+  padding-top: 10px;
+  padding-bottom: 11px;
 }
 
 .child-card:nth-child(3) .subject {
-  font-size: 11px;
+  font-size: 14px;
+}
+
+/* ==========================================
+   Aktueller Tag
+========================================== */
+
+/* Jojo */
+.child-card:nth-child(1) .day.today {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(239,90,166,.42),
+      rgba(239,90,166,.22)
+    );
+
+  border-color: rgba(239,90,166,.95);
+
+  box-shadow:
+    0 0 10px rgba(239,90,166,.36),
+    inset 0 0 10px rgba(239,90,166,.10);
+}
+
+/* Jooris */
+.child-card:nth-child(2) .day.today {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(66,183,255,.42),
+      rgba(66,183,255,.22)
+    );
+
+  border-color: rgba(66,183,255,.95);
+
+  box-shadow:
+    0 0 10px rgba(66,183,255,.36),
+    inset 0 0 10px rgba(66,183,255,.10);
+}
+
+/* Jule */
+.child-card:nth-child(3) .day.today {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(168,101,255,.42),
+      rgba(168,101,255,.22)
+    );
+
+  border-color: rgba(168,101,255,.95);
+
+  box-shadow:
+    0 0 10px rgba(168,101,255,.36),
+    inset 0 0 10px rgba(168,101,255,.10);
+}
+
+.day.today .day-name,
+.day.today .subject {
+  color: #ffffff;
 }
 
 /* ==========================================
@@ -302,14 +325,12 @@ h1 {
 
 .empty-state {
   grid-column: 1 / -1;
-
   padding: 30px;
-
   text-align: center;
 
   color: var(--text-soft);
-
   background: var(--surface);
+
   border-radius: 16px;
 }
 
@@ -332,10 +353,11 @@ h1 {
     padding: 8px;
   }
 
-  .subject {
+  .subject,
+  .child-card:nth-child(1) .subject,
+  .child-card:nth-child(2) .subject {
     font-size: 11px;
   }
-
 }
 
 /* ==========================================
@@ -364,99 +386,9 @@ h1 {
     font-size: 9px;
   }
 
-  .subject {
+  .subject,
+  .child-card:nth-child(1) .subject,
+  .child-card:nth-child(2) .subject {
     font-size: 10px;
   }
-
 }
-/* ==========================================
-   TV Feintuning – volle Home-Screens-Fläche
-   Version 3.3
-========================================== */
-
-@media (min-width: 1251px) {
-
-  .page {
-    padding: 18px 22px 18px;
-  }
-
-  h1 {
-    font-size: 38px;
-  }
-
-  .eyebrow {
-    font-size: 12px;
-  }
-
-  .last-update {
-    font-size: 12px;
-  }
-
-  .plans {
-    gap: 16px;
-  }
-
-  .child-card {
-    padding: 12px;
-    border-radius: 18px;
-  }
-
-  .child-title {
-    font-size: 24px;
-    margin-bottom: 10px;
-  }
-
-  .lesson-card {
-    margin-bottom: 7px;
-    padding: 9px 8px 10px;
-    border-radius: 11px;
-  }
-
-  .lesson-header {
-    margin-bottom: 6px;
-  }
-
-  .lesson-number {
-    font-size: 14px;
-  }
-
-  .lesson-time {
-    font-size: 13px;
-  }
-
-  .days {
-    gap: 5px;
-  }
-
-  .day {
-    padding: 7px 4px 8px;
-    border-radius: 8px;
-  }
-
-  .day-name {
-    font-size: 9px;
-    margin-bottom: 4px;
-  }
-
-  .subject {
-    font-size: 13px;
-    line-height: 1.15;
-  }
-
-  /* Jule mit etwas mehr Luft */
-  .child-card:nth-child(3) .lesson-card {
-    padding-top: 12px;
-    padding-bottom: 13px;
-  }
-
-  .child-card:nth-child(3) .day {
-    padding-top: 10px;
-    padding-bottom: 11px;
-  }
-
-  .child-card:nth-child(3) .subject {
-    font-size: 14px;
-  }
-
-}
- 
